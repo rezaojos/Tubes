@@ -1,3 +1,32 @@
+<?php 
+ 
+include 'config.php';
+ 
+error_reporting(0);
+ 
+session_start();
+ 
+if (isset($_SESSION['username'])) {
+    header("Location: index.html");
+}
+ 
+if (isset($_POST['submit'])) {
+    $email = $_POST['username'];
+    $password = md5($_POST['password']);
+ 
+    $sql = "SELECT * FROM customer WHERE username_customer='$username_customer' AND password_customer='$password_customer'";
+    $result = mysqli_query($conn, $sql);
+    if ($result->num_rows > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $_SESSION['username_customer'] = $row['username_customer'];
+        header("Location: index.html");
+    } else {
+        echo "<script>alert('Email atau password Anda salah. Silahkan coba lagi!')</script>";
+    }
+}
+ 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,13 +59,13 @@
 					<img src="images/img-01.png" alt="IMG">
 				</div>
 
-				<form class="login100-form validate-form">
+				<form action="index.html" class="login100-form validate-form">
 					<span class="login100-form-title">
 						Login
 					</span>
 
-					<div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-						<input class="input100" type="text" name="email" placeholder="Email">
+					<div class="wrap-input100 validate-input">
+						<input class="input100" type="text" name="username" placeholder="username">
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
 							<i class="fa fa-envelope" aria-hidden="true"></i>
@@ -52,7 +81,7 @@
 					</div>
 					
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn">
+						<button name="submit" class="login100-form-btn">
 							Login
 						</button>
 					</div>
