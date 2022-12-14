@@ -89,23 +89,5 @@ footer{
 	color: #fff;
 	text-align: center;
 }
-.box{
-	color: #009000;
-	margin: auto;
-}
-.box:after{
-	content: " ";
-	display: block;
-	clear: both;
-}
-.box .col-4{
-	width: : 10%;
-	padding: 10px;
-	box-sizing: border-box;
-	border: 1px solid;
-	text-align: center;
-	float: left;
-}
-.box .col-4 h4{
-	margin: 5px 0;
-}
+
+
