@@ -1,47 +1,7 @@
-<?php
-require_once("config.php");
-
-if(isset($_POST['login'])){
-
-    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
-    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-
-    $sql = "SELECT * FROM admin WHERE username=:username";
-    $stmt = $db->prepare($sql);
-    
-    // bind parameter ke query
-    $params = array(
-        ":username" => $username
-    );
-
-    $stmt->execute($params);
-
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-
-    // jika user terdaftar
-    if($user){
-        // verifikasi password
-        if(password_verify($password, $user["password"])){
-            // buat Session
-            session_start();
-            $_SESSION["user"] = $user;
-            // login sukses, alihkan ke halaman timeline
-            header("Location: masuk.php");
-        }else{
-            header("location:login.php?pesan=gagal");
-        }
-    }else{
-        header("location:login.php?pesan=notregister");
-    }
-
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login Apotek</title>
+	<title>Register Member</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -70,32 +30,32 @@ if(isset($_POST['login'])){
 					<img src="../images/img-01.png" alt="IMG">
 				</div>
 
-				<form method="POST" class="login100-form validate-form">
+				<form action="proses.php" method="POST" class="login100-form validate-form">
 					<span class="login100-form-title">
-						Login Admin
+						Register
 					</span>
-					<?php 
-                        if(isset($_GET['pesan'])){
-                            if($_GET['pesan'] == "gagal"){
-                                echo '<div style="color:red;">';
-                                echo 'Password Salah!';
-                                echo '</div>';
-                            }else if($_GET['pesan'] == "notregister"){
-                                echo '<div style="color:red;">';
-                                echo 'Username/Email tidak terdaftar!';
-                                echo '</div>';
-                            }
-                            else if($_GET['pesan'] == "logout"){
-                                echo "Anda telah berhasil logout";
-                            }
-                        
-                        }
-                    ?>
-					<div class="wrap-input100 validate-input" data-validate = "valid as reyhanadr">
+
+					<div class="wrap-input100 validate-input">
+						<input class="input100" type="text" name="id_admin" placeholder="ID_Admin">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-user" aria-hidden="true"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 validate-input">
+						<input class="input100" type="text" name="nama_admin" placeholder="Nama Admin">
+						<span class="focus-input100"></span>
+						<span class="symbol-input100">
+							<i class="fa fa-user" aria-hidden="true"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 validate-input">
 						<input class="input100" type="text" name="username" placeholder="Username">
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
-							<i class="fa fa-envelope" aria-hidden="true"></i>
+							<i class="fa fa-user" aria-hidden="true"></i>
 						</span>
 					</div>
 
@@ -106,15 +66,19 @@ if(isset($_POST['login'])){
 							<i class="fa fa-lock" aria-hidden="true"></i>
 						</span>
 					</div>
-					
+
 					<div class="container-login100-form-btn">
-						<input class="login100-form-btn" type="submit" name="login" value="Login"></input>
+						<a class="" href="login.html">
+							<button class="login100-form-btn">
+							Register
+							</button>
+						</a>
 					</div>
 
 					<div class="text-center p-t-136">
-						<a class="txt2" href="register.php">
-							Register
-							<i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+						<a class="txt2" href="login.html">
+							Kembali
+							<i class="fa fa-long-arrow-left m-l-5" aria-hidden="true"></i>
 						</a>
 					</div>
 				</form>

@@ -1,10 +1,51 @@
+<?php
+  require_once("config.php");
+
+  if(isset($_POST['login'])){
+
+    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
+    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+
+    $sql = "SELECT * FROM admin WHERE username=:username OR password=:password";
+    $stmt = $db->prepare($sql);
+    
+    // bind parameter ke query
+    $params = array(
+        ":username" => $username,
+        ":password" => $password
+    );
+
+    $stmt->execute($params);
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+    // jika user terdaftar
+    if($user){
+        // verifikasi password
+        if(password_verify($password, $user["password"])){
+            // buat Session
+            session_start();
+            $_SESSION["user"] = $user;
+            // login sukses, alihkan ke halaman timeline
+            header("Location: ../session/index.php");
+        }else{
+            header("location:login.php?pesan=gagal");
+        }
+    }else{
+        header("location:login.php?pesan=notregister");
+    }
+
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en" class="form-screen">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login - Admin One Tailwind CSS Admin Dashboard</title>
+  <title>Login - Admin Apotek</title>
 
   <!-- Tailwind is included -->
   <link rel="stylesheet" href="css/main.css?v=1628755089081">
@@ -92,9 +133,9 @@
 
           <div class="field grouped">
             <div class="control">
-              <button type="submit" class="button blue">
+              <input type="submit" class="button blue" name="login">
                 Login
-              </button>
+              </input>
             </div>
             <div class="control">
               <a href="index.html" class="button">
